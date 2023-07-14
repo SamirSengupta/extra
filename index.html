@@ -15,7 +15,7 @@
 			<input type="text" placeholder="Name" id="signupName" />
 			<input type="email" placeholder="Email" id="signupEmail" />
 			<input type="password" placeholder="Password" id="signupPassword" />
-			<button id="signUpButton" onclick="showSignUpMessage()">Sign Up</button>
+			<button type="button" id="signUpButton">Sign Up</button>
 		</form>
 	</div>
 	<div class="form-container sign-in-container">
@@ -24,7 +24,7 @@
 			<span>use your account</span>
 			<input type="email" placeholder="Email" id="loginEmail" />
 			<input type="password" placeholder="Password" id="loginPassword" />
-			<button id="signInButton" onclick="showLoginMessage()">Sign In</button>
+			<button type="button" id="signInButton">Sign In</button>
 		</form>
 	</div>
 	<div class="overlay-container">
@@ -53,7 +53,6 @@
   const signUpButton = document.getElementById('signUp');
   const signInButton = document.getElementById('signIn');
   const container = document.getElementById('container');
-  const messageDiv = document.getElementById('message');
 
   signUpButton.addEventListener('click', () => {
     container.classList.add("right-panel-active");
@@ -63,32 +62,53 @@
     container.classList.remove("right-panel-active");
   });
 
+  document.getElementById('signUpButton').addEventListener('click', showSignUpMessage);
+
   function showSignUpMessage() {
-    var name = document.getElementById('signupName').value;
-    var email = document.getElementById('signupEmail').value;
-    var password = document.getElementById('signupPassword').value;
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
 
     // Store the credentials in local storage
     localStorage.setItem('username', email);
     localStorage.setItem('password', password);
 
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'message';
+    document.body.appendChild(messageDiv);
+
     messageDiv.innerHTML = `Account created for ${email}`;
+    setTimeout(() => {
+      messageDiv.innerHTML = '';
+    }, 3000);
   }
 
+  document.getElementById('signInButton').addEventListener('click', showLoginMessage);
+
   function showLoginMessage() {
-    var email = document.getElementById('loginEmail').value;
-    var password = document.getElementById('loginPassword').value;
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
     // Retrieve the credentials from local storage
-    var storedUsername = localStorage.getItem('username');
-    var storedPassword = localStorage.getItem('password');
+    const storedUsername = localStorage.getItem('username');
+    const storedPassword = localStorage.getItem('password');
+
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'message';
+    document.body.appendChild(messageDiv);
 
     // Validate the credentials
     if (email === storedUsername && password === storedPassword) {
       messageDiv.innerHTML = `Logged in as ${email}`;
-      window.location.href = 'https://samirsengupta.github.io/Code-Academy/';
+      setTimeout(() => {
+        messageDiv.innerHTML = '';
+        window.location.href = 'https://samirsengupta.github.io/Code-Academy/';
+      }, 3000);
     } else {
       messageDiv.innerHTML = 'Invalid username or password!';
+      setTimeout(() => {
+        messageDiv.innerHTML = '';
+      }, 3000);
     }
   }
 </script>
