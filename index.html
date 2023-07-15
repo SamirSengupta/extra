@@ -50,7 +50,22 @@
 	</p>
 </footer>
 <!-- partial -->
-<script>
+<script type="module">
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDZdFHxg7di_leImooLhVlbVW7UqvgiMCs",
+    authDomain: "code-academy-20.firebaseapp.com",
+    projectId: "code-academy-20",
+    storageBucket: "code-academy-20.appspot.com",
+    messagingSenderId: "986808335819",
+    appId: "1:986808335819:web:fbbd51b1e250f77da14a4e",
+    measurementId: "G-K5BTE84KZN"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
   const signUpButton = document.getElementById('signUp');
   const signInButton = document.getElementById('signIn');
   const container = document.getElementById('container');
@@ -66,22 +81,23 @@
   document.getElementById('signUpButton').addEventListener('click', showSignUpMessage);
 
   function showSignUpMessage() {
-    const name = document.getElementById('signupName').value;
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
 
-    // Store the credentials in local storage
-    localStorage.setItem('username', email);
-    localStorage.setItem('password', password);
-
-    const messageDiv = document.createElement('div');
-    messageDiv.id = 'message';
-    document.body.appendChild(messageDiv);
-
-    messageDiv.innerHTML = `Account created for ${email}`;
-    setTimeout(() => {
-      messageDiv.innerHTML = '';
-    }, 3000);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'message';
+        document.body.appendChild(messageDiv);
+        messageDiv.innerHTML = `Account created for ${user.email}`;
+        setTimeout(() => {
+          messageDiv.innerHTML = '';
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   document.getElementById('signInButton').addEventListener('click', showLoginMessage);
@@ -90,27 +106,21 @@
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
-    // Retrieve the credentials from local storage
-    const storedUsername = localStorage.getItem('username');
-    const storedPassword = localStorage.getItem('password');
-
-    const messageDiv = document.createElement('div');
-    messageDiv.id = 'message';
-    document.body.appendChild(messageDiv);
-
-    // Validate the credentials
-    if (email === storedUsername && password === storedPassword) {
-      messageDiv.innerHTML = `Logged in as ${email}`;
-      setTimeout(() => {
-        messageDiv.innerHTML = '';
-        window.location.href = 'https://samirsengupta.github.io/Code-Academy/';
-      }, 3000);
-    } else {
-      messageDiv.innerHTML = 'Invalid username or password!';
-      setTimeout(() => {
-        messageDiv.innerHTML = '';
-      }, 3000);
-    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'message';
+        document.body.appendChild(messageDiv);
+        messageDiv.innerHTML = `Logged in as ${user.email}`;
+        setTimeout(() => {
+          messageDiv.innerHTML = '';
+          window.location.href = 'https://samirsengupta.github.io/Code-Academy/';
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 </script>
 </body>
